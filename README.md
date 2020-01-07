@@ -1,12 +1,4 @@
-<div align="center">
-  <a href="https://www.material-theme.com">
-<img src="logo.svg" width="320" height="320" alt="logo"></img>
-</a>
-</div>
-
-# Custom Syntax Highlighter Plugin
-
-This is a Jetbrains plugin showcasing a solution to the problem of custom syntax highlighters (https://youtrack.jetbrains.com/issue/IDEABKL-5473)
+# PHP Syntax Color Plugin
 
 ## Table Of Contents
 * [Language Additions](#language-additions)
@@ -14,34 +6,14 @@ This is a Jetbrains plugin showcasing a solution to the problem of custom syntax
 
 ## Language Additions
 
-This plugin adds more _Color Scheme_ settings for _JavaScript, TypeScript and Java_, allowing a finer customization of the language's keywords.
+This plugin adds more Color Scheme settings for Php allowing a finer customization of the language's keywords.
 
 <figure>
 <figcaption>Color Scheme Settings</figcaption>
 <img src="/docs/settings.png" alt="Color Scheme Settings">
 </figure>
 
-**JavaScript**:
-- this, super
-- var, let, const
-- import, export, require, from
-- debugger
-- null, undefined
-- function
-
-**TypeScript**:
-- private, public, protected
-
-**Java**:
-- private, public, protected
-- this, super
-- static, final
-
---------------------
-
 ## Development
-
-
 
 ### Requirements
 
@@ -65,30 +37,21 @@ Then open the plugins page (Settings > Plugin) and select `Install plugin from d
 If you want to add new keywords to the provided languages, here's a quick tutorial:
 
 Let's say for instance that I want to highlight differently the "class" keyword in Java:
-1. Open the file `JavaAnnotator.java`.
+1. Open the file `PhpAnnotator.java`.
 2. Create a new `TextAttributesKey` at the top named `CLASS` (or whatever you want) and assign it a new TextAttributes with a key of your choice, for instance `JAVA.MYCUSTOM_CLASS`.
 3. Note that in order to not override existing TextAttributeKeys provided by the IDE, it is recommended to add a custom identifier that will most likely not be used by the IDE or other plugins. The recommended denomination would be `<language>.<identifier>_<keyword>`
-4. Select the fallback attributes key, e.g. the color to take if the user didn't select a color. Here it would be the `JAVA_KEYWORD` key.
+4. Select the fallback attributes key, e.g. the color to take if the user didn't select a color. Here it would be the `PHP_KEYWORD` key.
 5. Implement the `getKeywordKind` method. This method will parse the editor text and annotate the keywords with the relevant TextAttributesKey. Here it would return the `CLASS` key if it finds the text "class".
 
 We're done with the annotator. Here we already have all occurrences of the "class" word annotated with our brand new TextAttributesKey and we can already change their color by modifying the color scheme's `.icls` file. But of course it would be easier to have it in the Color Scheme Settings. Here's how:
 
-1. Open the file `JavaColorSettings.java`
-2. Add a new `TextAttributesKey` like before, but instead of _creating_ a new one, we will reuse the one created in the `JavaAnnotator`.
-3. Add a new `AttributesDescriptor` in the `JAVA_ATTRIBUTES` field. This will be the new entry in the Java Color Scheme page.
+1. Open the file `PhpColorSettings.java`
+2. Add a new `TextAttributesKey` like before, but instead of _creating_ a new one, we will reuse the one created in the `PhpAnnotator`.
+3. Add a new `AttributesDescriptor` in the `PHP_ATTRIBUTES` field. This will be the new entry in the Java Color Scheme page.
 4. Optional: Add a new "tag" in the `createAdditionalHlAttrs` method and assign it the `TextAttributesKey`. Here it would be `custom_class` for instance.
 5. Optional: Change the `demoText` and add an example text of your custom keyword, wrapped by the new "tag" you created previously. Here, it would be something like `public <custom_class>class</custom_class> <class>Foo</class>`
 
-That's it! Now in the __Java Additions__ page you will see your new entry, with the fallback you chose, and optionally the code representing the addition with preview in realtime. Once you click "OK" your Java code will be annotated with your new colors!
-
-### Adding new languages
-
-Adding more languages is almost the same process as adding new keywords, instead that you would have to create a new `Annotator` and a new `ColorSettingsPage`.
-
-1. Create your new Annotator, like for example `KotlinAnnotator`
-2. Implement the methods by taking into example `JavaAnnotator`
-3. Create a new ColorSettings page and do the same.
-4. Register your new annotator and colorSettingsPage into the `plugin.xml` file.
+That's it! Now in the __Php Colors__ page you will see your new entry, with the fallback you chose, and optionally the code representing the addition with preview in realtime. Once you click "OK" your PHP code will be annotated with your new colors!
 
 PS: Be aware that even though your annotators are bundled with your plugin, the languages they extend are plugin-dependant, meaning that your KotlinAnnotator will only work if the Kotlin plugin is installed in your users IDEs.
 
