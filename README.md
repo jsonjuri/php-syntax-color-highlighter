@@ -3,7 +3,7 @@
 This plugin was originally created for Javascript, Typescript and is created by Elior Boukhobza.
 See: https://github.com/mallowigi/Custom-Syntax-Highlighter
 
-I have modified the plugin PHP code coloring.
+I have modified the plugin for PHP code coloring.
 
 Credits go to Elior Boukhobza, thank you :)
 
