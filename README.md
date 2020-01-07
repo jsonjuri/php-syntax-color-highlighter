@@ -1,5 +1,12 @@
 # PHP Syntax Color Plugin
 
+This plugin was originally created for Javascript, Typescript and is created by Elior Boukhobza.
+See: https://github.com/mallowigi/Custom-Syntax-Highlighter
+
+I have modified the plugin PHP code coloring.
+
+Credits go to Elior Boukhobza, thank you :)
+
 ## Table Of Contents
 * [Language Additions](#language-additions)
 * [Development](#development)
@@ -56,4 +63,3 @@ That's it! Now in the __Php Colors__ page you will see your new entry, with the 
 PS: Be aware that even though your annotators are bundled with your plugin, the languages they extend are plugin-dependant, meaning that your KotlinAnnotator will only work if the Kotlin plugin is installed in your users IDEs.
 
 --------------------
-
