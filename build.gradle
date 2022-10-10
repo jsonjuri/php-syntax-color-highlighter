@@ -25,31 +25,31 @@
  */
 buildscript {
     repositories {
-        jcenter()
-        maven { url 'http://dl.bintray.com/content/aalmiray/kordamp' }
+        gradlePluginPortal()
     }
     dependencies {
-        classpath 'org.kordamp:markdown-gradle-plugin:1.0.0'
+        classpath "org.kordamp:markdown-gradle-plugin:1.2.0"
     }
 }
 
-
 plugins {
-    id 'org.jetbrains.intellij' version '0.3.12'
+    id "org.jetbrains.intellij" version "0.3.12"
     id "org.jetbrains.kotlin.jvm" version "1.2.40"
+    id "org.kordamp.markdown.convert" version "1.2.0"
 }
 
 repositories {
     mavenCentral()
-    maven { url 'http://dl.bintray.com/jetbrains/intellij-plugin-service' }
+    maven {
+        url 'https://www.jetbrains.com/intellij-repository/'
+    }
 }
-
 
 dependencies {
 
 }
-apply plugin: 'org.kordamp.markdown.convert'
 
+apply plugin: 'org.kordamp.markdown.convert'
 apply plugin: 'java'
 apply plugin: 'checkstyle'
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -61,7 +61,7 @@ apply plugin: "kotlin"
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
     //noinspection GrUnresolvedAccess
     kotlinOptions {
-        apiVersion = "1.0"
+        apiVersion = "1.5"
         jvmTarget = "1.8"
     }
 }
@@ -114,7 +114,7 @@ intellij {
 }
 compileKotlin {
     kotlinOptions {
-        apiVersion = "1.1"
+        apiVersion = "1.5"
     }
 }
 
