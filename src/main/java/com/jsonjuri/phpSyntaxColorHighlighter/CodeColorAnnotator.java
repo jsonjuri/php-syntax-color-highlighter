@@ -1,21 +1,78 @@
-package com.jsonjuri.annotators;
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2015-2021 Elior "Mallowigi" Boukhobza
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ *
+ */
 
+package com.jsonjuri.phpSyntaxColorHighlighter;
+
+import com.intellij.lang.annotation.AnnotationHolder;
+import com.intellij.lang.annotation.Annotator;
+import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
+import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.impl.source.tree.LeafPsiElement;
+import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ObjectUtils;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class PHPAnnotator extends BaseAnnotator {
+@SuppressWarnings({"DuplicateStringLiteralInspection",
+        "SwitchStatement",
+        "HardCodedStringLiteral",
+        "SwitchStatementWithTooManyBranches",
+        "OverlyLongMethod"})
+public final class CodeColorAnnotator implements Annotator {
+    @SuppressWarnings("MethodWithMultipleReturnPoints")
+    public void annotate(@NotNull final PsiElement element, @NotNull final AnnotationHolder holder) {
+        if (element instanceof LeafPsiElement) {
+            if (PsiTreeUtil.getParentOfType(element, PsiComment.class) != null) {
+                return;
+            }
 
-    private static final TextAttributesKey PHP_KEYWORD = ObjectUtils.notNull(TextAttributesKey.find("PHP_KEYWORD"), DefaultLanguageHighlighterColors.KEYWORD);
+            final TextAttributesKey kind = getKeywordKind(element);
+            if (kind == null) {
+                return;
+            }
+            final TextRange textRange = element.getTextRange();
+            final TextRange range = new TextRange(textRange.getStartOffset(), textRange.getEndOffset());
+            holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
+                    .range(range)
+                    .textAttributes(kind)
+                    .create();
+        }
+    }
+
+    public static final TextAttributesKey PHP_KEYWORD = ObjectUtils.notNull(TextAttributesKey.find("PHP_KEYWORD"), DefaultLanguageHighlighterColors.KEYWORD);
     public static final TextAttributesKey MODIFIER = TextAttributesKey.createTextAttributesKey("PHP.MODIFIER", PHP_KEYWORD);
     public static final TextAttributesKey STATIC_FINAL = TextAttributesKey.createTextAttributesKey("PHP.STATIC_FINAL", PHP_KEYWORD);
     public static final TextAttributesKey THIS_SELF = TextAttributesKey.createTextAttributesKey("PHP.THIS_SELF", PHP_KEYWORD);
     public static final TextAttributesKey USE_NAMESPACE = TextAttributesKey.createTextAttributesKey("PHP.USE_NAMESPACE", PHP_KEYWORD);
     public static final TextAttributesKey FUNCTION = TextAttributesKey.createTextAttributesKey("PHP.FUNCTION", PHP_KEYWORD);
-
     public static final TextAttributesKey PHP_HANDLING_FUNCTION = TextAttributesKey.createTextAttributesKey("PHP_HANDLING_FUNCTION", PHP_KEYWORD);
     public static final TextAttributesKey PHP_STRING_FUNCTION = TextAttributesKey.createTextAttributesKey("PHP_STRING_FUNCTION", PHP_KEYWORD);
     public static final TextAttributesKey PHP_ARRAY_FUNCTION = TextAttributesKey.createTextAttributesKey("PHP_ARRAY_FUNCTION", PHP_KEYWORD);
@@ -27,8 +84,8 @@ public class PHPAnnotator extends BaseAnnotator {
     public static final TextAttributesKey PHP_SUCCESS = TextAttributesKey.createTextAttributesKey("PHP_SUCCESS", PHP_KEYWORD);
     public static final TextAttributesKey PHP_ERROR = TextAttributesKey.createTextAttributesKey("PHP_ERROR", PHP_KEYWORD);
 
-    @Override
-    protected TextAttributesKey getKeywordKind(@NotNull final PsiElement element) {
+    @Nullable
+    private TextAttributesKey getKeywordKind(@NotNull final PsiElement element) {
         TextAttributesKey kind = null;
         switch (element.getText()) {
             case "private":
@@ -56,39 +113,39 @@ public class PHPAnnotator extends BaseAnnotator {
                 break;
 
             case "boolval":
-            case "debug_​zval_​dump":
+            case "debug_zval_dump":
             case "doubleval":
             case "empty":
             case "floatval":
-            case "get_​defined_​vars":
-            case "get_​resource_​type":
+            case "get_defined_vars":
+            case "get_resource_type":
             case "gettype":
             case "intval":
-            case "is_​array":
-            case "is_​bool":
-            case "is_​callable":
-            case "is_​countable":
-            case "is_​double":
-            case "is_​float":
-            case "is_​int":
-            case "is_​integer":
-            case "is_​iterable":
-            case "is_​long":
-            case "is_​numeric":
-            case "is_​object":
-            case "is_​real":
-            case "is_​resource":
-            case "is_​scalar":
-            case "is_​string":
+            case "is_array":
+            case "is_bool":
+            case "is_callable":
+            case "is_countable":
+            case "is_double":
+            case "is_float":
+            case "is_int":
+            case "is_integer":
+            case "is_iterable":
+            case "is_long":
+            case "is_numeric":
+            case "is_object":
+            case "is_real":
+            case "is_resource":
+            case "is_scalar":
+            case "is_string":
             case "isset":
-            case "print_​r":
+            case "print_r":
             case "serialize":
             case "settype":
             case "strval":
             case "unserialize":
             case "unset":
-            case "var_​dump":
-            case "var_​export":
+            case "var_dump":
+            case "var_export":
             case "this":
             case "super":
                 kind = PHP_HANDLING_FUNCTION;
@@ -195,58 +252,58 @@ public class PHPAnnotator extends BaseAnnotator {
                 kind = PHP_STRING_FUNCTION;
                 break;
 
-            case "array_​change_​key_​case":
-            case "array_​chunk":
-            case "array_​column":
-            case "array_​combine":
-            case "array_​count_​values":
-            case "array_​diff_​assoc":
-            case "array_​diff_​key":
-            case "array_​diff_​uassoc":
-            case "array_​diff_​ukey":
-            case "array_​diff":
-            case "array_​fill_​keys":
-            case "array_​fill":
-            case "array_​filter":
-            case "array_​flip":
-            case "array_​intersect_​assoc":
-            case "array_​intersect_​key":
-            case "array_​intersect_​uassoc":
-            case "array_​intersect_​ukey":
-            case "array_​intersect":
-            case "array_​key_​exists":
-            case "array_​key_​first":
-            case "array_​key_​last":
-            case "array_​keys":
-            case "array_​map":
-            case "array_​merge_​recursive":
-            case "array_​merge":
-            case "array_​multisort":
-            case "array_​pad":
-            case "array_​pop":
-            case "array_​product":
-            case "array_​push":
-            case "array_​rand":
-            case "array_​reduce":
-            case "array_​replace_​recursive":
-            case "array_​replace":
-            case "array_​reverse":
-            case "array_​search":
-            case "array_​shift":
-            case "array_​slice":
-            case "array_​splice":
-            case "array_​sum":
-            case "array_​udiff_​assoc":
-            case "array_​udiff_​uassoc":
-            case "array_​udiff":
-            case "array_​uintersect_​assoc":
-            case "array_​uintersect_​uassoc":
-            case "array_​uintersect":
-            case "array_​unique":
-            case "array_​unshift":
-            case "array_​values":
-            case "array_​walk_​recursive":
-            case "array_​walk":
+            case "array_change_key_case":
+            case "array_chunk":
+            case "array_column":
+            case "array_combine":
+            case "array_count_values":
+            case "array_diff_assoc":
+            case "array_diff_key":
+            case "array_diff_uassoc":
+            case "array_diff_ukey":
+            case "array_diff":
+            case "array_fill_keys":
+            case "array_fill":
+            case "array_filter":
+            case "array_flip":
+            case "array_intersect_assoc":
+            case "array_intersect_key":
+            case "array_intersect_uassoc":
+            case "array_intersect_ukey":
+            case "array_intersect":
+            case "array_key_exists":
+            case "array_key_first":
+            case "array_key_last":
+            case "array_keys":
+            case "array_map":
+            case "array_merge_recursive":
+            case "array_merge":
+            case "array_multisort":
+            case "array_pad":
+            case "array_pop":
+            case "array_product":
+            case "array_push":
+            case "array_rand":
+            case "array_reduce":
+            case "array_replace_recursive":
+            case "array_replace":
+            case "array_reverse":
+            case "array_search":
+            case "array_shift":
+            case "array_slice":
+            case "array_splice":
+            case "array_sum":
+            case "array_udiff_assoc":
+            case "array_udiff_uassoc":
+            case "array_udiff":
+            case "array_uintersect_assoc":
+            case "array_uintersect_uassoc":
+            case "array_uintersect":
+            case "array_unique":
+            case "array_unshift":
+            case "array_values":
+            case "array_walk_recursive":
+            case "array_walk":
             case "array":
             case "arsort":
             case "asort":
@@ -255,8 +312,8 @@ public class PHPAnnotator extends BaseAnnotator {
             case "current":
             case "end":
             case "extract":
-            case "in_​array":
-            case "key_​exists":
+            case "in_array":
+            case "key_exists":
             case "key":
             case "krsort":
             case "ksort":
@@ -279,66 +336,66 @@ public class PHPAnnotator extends BaseAnnotator {
                 kind = PHP_ARRAY_FUNCTION;
                 break;
 
-            case "_​_​autoload":
-            case "class_​alias":
-            case "class_​exists":
-            case "get_​called_​class":
-            case "get_​class_​methods":
-            case "get_​class_​vars":
-            case "get_​class":
-            case "get_​declared_​classes":
-            case "get_​declared_​interfaces":
-            case "get_​declared_​traits":
-            case "get_​object_​vars":
-            case "get_​parent_​class":
-            case "interface_​exists":
-            case "is_​a":
-            case "is_​subclass_​of":
-            case "method_​exists":
-            case "property_​exists":
-            case "trait_​exists":
+            case "__autoload":
+            case "class_alias":
+            case "class_exists":
+            case "get_called_class":
+            case "get_class_methods":
+            case "get_class_vars":
+            case "get_class":
+            case "get_declared_classes":
+            case "get_declared_interfaces":
+            case "get_declared_traits":
+            case "get_object_vars":
+            case "get_parent_class":
+            case "interface_exists":
+            case "is_a":
+            case "is_subclass_of":
+            case "method_exists":
+            case "property_exists":
+            case "trait_exists":
                 kind = PHP_OBJECT_FUNCTION;
                 break;
 
-            case "connection_​aborted":
-            case "connection_​status":
+            case "connection_aborted":
+            case "connection_status":
             case "constant":
             case "define":
             case "defined":
             case "die":
             case "eval":
             case "exit":
-            case "get_​browser":
-            case "_​_​halt_​compiler":
-            case "highlight_​file":
-            case "highlight_​string":
+            case "get_browser":
+            case "__halt_compiler":
+            case "highlight_file":
+            case "highlight_string":
             case "hrtime":
-            case "ignore_​user_​abort":
+            case "ignore_user_abort":
             case "pack":
-            case "php_​check_​syntax":
-            case "php_​strip_​whitespace":
-            case "sapi_​windows_​cp_​conv":
-            case "sapi_​windows_​cp_​get":
-            case "sapi_​windows_​cp_​is_​utf8":
-            case "sapi_​windows_​cp_​set":
-            case "sapi_​windows_​generate_​ctrl_​event":
-            case "sapi_​windows_​set_​ctrl_​handler":
-            case "sapi_​windows_​vt100_​support":
-            case "show_​source":
+            case "php_check_syntax":
+            case "php_strip_whitespace":
+            case "sapi_windows_cp_conv":
+            case "sapi_windows_cp_get":
+            case "sapi_windows_cp_is_utf8":
+            case "sapi_windows_cp_set":
+            case "sapi_windows_generate_ctrl_event":
+            case "sapi_windows_set_ctrl_handler":
+            case "sapi_windows_vt100_support":
+            case "show_source":
             case "sleep":
-            case "sys_​getloadavg":
-            case "time_​nanosleep":
-            case "time_​sleep_​until":
+            case "sys_getloadavg":
+            case "time_nanosleep":
+            case "time_sleep_until":
             case "uniqid":
             case "unpack":
             case "usleep":
                 kind = PHP_MISC_FUNCTION;
                 break;
 
-            case "json_​decode":
-            case "json_​encode":
-            case "json_​last_​error_​msg":
-            case "json_​last_​error":
+            case "json_decode":
+            case "json_encode":
+            case "json_last_error_msg":
+            case "json_last_error":
                 kind = PHP_JSON_FUNCTION;
                 break;
 
@@ -350,7 +407,7 @@ public class PHPAnnotator extends BaseAnnotator {
             case "atan2":
             case "atan":
             case "atanh":
-            case "base_​convert":
+            case "base_convert":
             case "bindec":
             case "ceil":
             case "cos":
@@ -367,18 +424,18 @@ public class PHPAnnotator extends BaseAnnotator {
             case "hexdec":
             case "hypot":
             case "intdiv":
-            case "is_​finite":
-            case "is_​infinite":
-            case "is_​nan":
-            case "lcg_​value":
+            case "is_finite":
+            case "is_infinite":
+            case "is_nan":
+            case "lcg_value":
             case "log10":
             case "log1p":
             case "log":
             case "max":
             case "min":
-            case "mt_​getrandmax":
-            case "mt_​rand":
-            case "mt_​srand":
+            case "mt_getrandmax":
+            case "mt_rand":
+            case "mt_srand":
             case "octdec":
             case "pi":
             case "pow":
@@ -394,18 +451,18 @@ public class PHPAnnotator extends BaseAnnotator {
                 kind = PHP_MATH_FUNCTION;
                 break;
 
-            case "call_​user_​func_​array":
-            case "call_​user_​func":
-            case "forward_​static_​call_​array":
-            case "forward_​static_​call":
-            case "func_​get_​arg":
-            case "func_​get_​args":
-            case "func_​num_​args":
-            case "function_​exists":
-            case "get_​defined_​functions":
-            case "register_​shutdown_​function":
-            case "register_​tick_​function":
-            case "unregister_​tick_​function":
+            case "call_user_func_array":
+            case "call_user_func":
+            case "forward_static_call_array":
+            case "forward_static_call":
+            case "func_get_arg":
+            case "func_get_args":
+            case "func_num_args":
+            case "function_exists":
+            case "get_defined_functions":
+            case "register_shutdown_function":
+            case "register_tick_function":
+            case "unregister_tick_function":
                 kind = PHP_HANDLER_FUNCTION;
                 break;
 

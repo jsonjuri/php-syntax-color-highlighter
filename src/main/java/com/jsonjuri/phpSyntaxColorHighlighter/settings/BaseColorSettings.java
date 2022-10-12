@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2020 Elior Boukhobza
+ * Copyright (c) 2015-2021 Elior "Mallowigi" Boukhobza
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,5 +24,21 @@
  *
  */
 
-rootProject.name = 'php-syntax-color-highlighter'
+package com.jsonjuri.phpSyntaxColorHighlighter.settings;
 
+import com.intellij.lang.Language;
+import com.intellij.openapi.fileTypes.SyntaxHighlighter;
+import com.intellij.openapi.fileTypes.SyntaxHighlighterFactory;
+import com.intellij.openapi.options.colors.ColorSettingsPage;
+import com.intellij.psi.codeStyle.DisplayPrioritySortable;
+import org.jetbrains.annotations.NotNull;
+
+abstract class BaseColorSettings implements ColorSettingsPage, DisplayPrioritySortable {
+  static SyntaxHighlighter getSyntaxHighlighterWithFallback(@NotNull final Language lang) {
+    final SyntaxHighlighter syntaxHighlighter = SyntaxHighlighterFactory.getSyntaxHighlighter(lang, null, null);
+    if (syntaxHighlighter == null) {
+      return SyntaxHighlighterFactory.getSyntaxHighlighter(Language.ANY, null, null);
+    }
+    return syntaxHighlighter;
+  }
+}
