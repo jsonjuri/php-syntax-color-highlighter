@@ -10,8 +10,9 @@
     <resource-bundle>messages.OptionsBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <annotator language="PHP"
-                   implementationClass="com.jsonjuri.phpSyntaxColorHighlighter.CodeColorAnnotator"/>
+        <additionalTextAttributes scheme="Default" file="colorSchemes/phpAddonsDefault.xml"/>
+        <additionalTextAttributes scheme="Darcula" file="colorSchemes/phpAddonsDarcula.xml"/>
+        <annotator language="PHP" implementationClass="com.jsonjuri.phpSyntaxColorHighlighter.CodeColorAnnotator"/>
         <colorSettingsPage implementation="com.jsonjuri.phpSyntaxColorHighlighter.settings.CodeColorSettings"/>
     </extensions>
 </idea-plugin>

@@ -1,0 +1,142 @@
+<?xml version='1.0'?>
+<list>
+  <option name="PHP_KEYWORD">
+    <value>
+      <option name="FOREGROUND" value="FFD766"/>
+      <option name="FONT_TYPE" value=""/>
+    </value>
+  </option>
+  <option name="MODIFIER">
+    <value>
+      <option name="FOREGROUND" value="C4C4B7"/>
+      <option name="FONT_TYPE" value=""/>
+    </value>
+  </option>
+  <option name="STATIC_FINAL">
+    <value>
+      <option name="FOREGROUND" value="C4C4B7"/>
+      <option name="FONT_TYPE" value=""/>
+    </value>
+  </option>
+  <option name="THIS_SELF">
+    <value>
+      <option name="FOREGROUND" value="C4C4B7"/>
+      <option name="FONT_TYPE" value=""/>
+    </value>
+  </option>
+  <option name="USE_NAMESPACE">
+    <value>
+      <option name="FOREGROUND" value="A78928"/>
+      <option name="FONT_TYPE" value=""/>
+    </value>
+  </option>
+  <option name="FUNCTION">
+    <value>
+      <option name="FOREGROUND" value="FF9100"/>
+      <option name="FONT_TYPE" value=""/>
+    </value>
+  </option>
+  <option name="PHP_HANDLING_FUNCTION">
+    <value>
+      <option name="FOREGROUND" value="FFD766"/>
+      <option name="FONT_TYPE" value=""/>
+    </value>
+  </option>
+  <option name="PHP_STRING_FUNCTION">
+    <value>
+      <option name="FOREGROUND" value="93E2FF"/>
+      <option name="FONT_TYPE" value=""/>
+    </value>
+  </option>
+  <option name="PHP_ARRAY_FUNCTION">
+    <value>
+      <option name="FOREGROUND" value="B2A274"/>
+      <option name="FONT_TYPE" value=""/>
+    </value>
+  </option>
+  <option name="PHP_OBJECT_FUNCTION">
+    <value>
+      <option name="FOREGROUND" value="B2A274"/>
+      <option name="FONT_TYPE" value=""/>
+    </value>
+  </option>
+  <option name="PHP_MISC_FUNCTION">
+    <value>
+      <option name="FOREGROUND" value="E36D6D"/>
+      <option name="FONT_TYPE" value=""/>
+    </value>
+  </option>
+  <option name="PHP_JSON_FUNCTION">
+    <value>
+      <option name="FOREGROUND" value="FFD766"/>
+      <option name="FONT_TYPE" value=""/>
+    </value>
+  </option>
+  <option name="PHP_MATH_FUNCTION">
+    <value>
+      <option name="FOREGROUND" value="C489AF"/>
+      <option name="FONT_TYPE" value=""/>
+    </value>
+  </option>
+  <option name="PHP_HANDLER_FUNCTION">
+    <value>
+      <option name="FOREGROUND" value="B2A274"/>
+      <option name="FONT_TYPE" value=""/>
+    </value>
+  </option>
+  <option name="PHP_TRUE_KEYWORD">
+    <value>
+      <option name="FOREGROUND" value="A6D634"/>
+      <option name="FONT_TYPE" value=""/>
+    </value>
+  </option>
+  <option name="PHP_FALSE_KEYWORD">
+    <value>
+      <option name="FOREGROUND" value="E36D6D"/>
+      <option name="FONT_TYPE" value=""/>
+    </value>
+  </option>
+  <option name="PHP_NULL_KEYWORD">
+    <value>
+      <option name="FOREGROUND" value="E36D6D"/>
+      <option name="FONT_TYPE" value=""/>
+    </value>
+  </option>
+  <option name="PHP_PREG">
+    <value>
+      <option name="FOREGROUND" value="0F9AFF"/>
+      <option name="FONT_TYPE" value=""/>
+    </value>
+  </option>
+  <option name="PHP_DATE">
+    <value>
+      <option name="FOREGROUND" value="EEFF00"/>
+      <option name="FONT_TYPE" value=""/>
+    </value>
+  </option>
+  <option name="PHP_DEBUG">
+    <value>
+      <option name="FOREGROUND" value="EE0000"/>
+      <option name="BACKGROUND" value="999999"/>
+      <option name="FONT_TYPE" value=""/>
+    </value>
+  </option>
+  <option name="PHP_SUCCESS">
+    <value>
+      <option name="FOREGROUND" value="A6D634"/>
+      <option name="FONT_TYPE" value=""/>
+    </value>
+  </option>
+  <option name="PHP_ERROR">
+    <value>
+      <option name="FOREGROUND" value="E36D6D"/>
+      <option name="FONT_TYPE" value=""/>
+    </value>
+  </option>
+  <option name="PHP_RETURN">
+    <value>
+      <option name="FOREGROUND" value="F29CFF"/>
+      <option name="FONT_TYPE" value=""/>
+    </value>
+  </option>
+</list>

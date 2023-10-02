@@ -1,7 +1,7 @@
 /*
  * The MIT License (MIT)
  *
- * Copyright (c) 2015-2021 Elior "Mallowigi" Boukhobza
+ * Copyright (c) Elior "Mallowigi" Boukhobza & jsonjuri
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,7 @@ import com.intellij.lang.annotation.AnnotationHolder;
 import com.intellij.lang.annotation.Annotator;
 import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
+
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiComment;
@@ -46,6 +47,7 @@ import org.jetbrains.annotations.Nullable;
         "HardCodedStringLiteral",
         "SwitchStatementWithTooManyBranches",
         "OverlyLongMethod"})
+
 public final class CodeColorAnnotator implements Annotator {
     @SuppressWarnings("MethodWithMultipleReturnPoints")
     public void annotate(@NotNull final PsiElement element, @NotNull final AnnotationHolder holder) {
@@ -68,6 +70,7 @@ public final class CodeColorAnnotator implements Annotator {
     }
 
     public static final TextAttributesKey PHP_KEYWORD = ObjectUtils.notNull(TextAttributesKey.find("PHP_KEYWORD"), DefaultLanguageHighlighterColors.KEYWORD);
+    public static final TextAttributesKey PHP_RETURN = TextAttributesKey.createTextAttributesKey("PHP_RETURN", PHP_KEYWORD);
     public static final TextAttributesKey MODIFIER = TextAttributesKey.createTextAttributesKey("PHP.MODIFIER", PHP_KEYWORD);
     public static final TextAttributesKey STATIC_FINAL = TextAttributesKey.createTextAttributesKey("PHP.STATIC_FINAL", PHP_KEYWORD);
     public static final TextAttributesKey THIS_SELF = TextAttributesKey.createTextAttributesKey("PHP.THIS_SELF", PHP_KEYWORD);
@@ -81,13 +84,24 @@ public final class CodeColorAnnotator implements Annotator {
     public static final TextAttributesKey PHP_JSON_FUNCTION = TextAttributesKey.createTextAttributesKey("PHP_JSON_FUNCTION", PHP_KEYWORD);
     public static final TextAttributesKey PHP_MATH_FUNCTION = TextAttributesKey.createTextAttributesKey("PHP_MATH_FUNCTION", PHP_KEYWORD);
     public static final TextAttributesKey PHP_HANDLER_FUNCTION = TextAttributesKey.createTextAttributesKey("PHP_HANDLER_FUNCTION", PHP_KEYWORD);
+    public static final TextAttributesKey PHP_TRUE_KEYWORD = TextAttributesKey.createTextAttributesKey("PHP_TRUE_KEYWORD", PHP_KEYWORD);
+    public static final TextAttributesKey PHP_FALSE_KEYWORD = TextAttributesKey.createTextAttributesKey("PHP_FALSE_KEYWORD", PHP_KEYWORD);
+    public static final TextAttributesKey PHP_NULL_KEYWORD = TextAttributesKey.createTextAttributesKey("PHP_NULL_KEYWORD", PHP_KEYWORD);
+    public static final TextAttributesKey PHP_PREG = TextAttributesKey.createTextAttributesKey("PHP_PREG", PHP_KEYWORD);
+    public static final TextAttributesKey PHP_DATE = TextAttributesKey.createTextAttributesKey("PHP_DATE", PHP_KEYWORD);
+    public static final TextAttributesKey PHP_DEBUG = TextAttributesKey.createTextAttributesKey("PHP_DEBUG", PHP_KEYWORD);
     public static final TextAttributesKey PHP_SUCCESS = TextAttributesKey.createTextAttributesKey("PHP_SUCCESS", PHP_KEYWORD);
     public static final TextAttributesKey PHP_ERROR = TextAttributesKey.createTextAttributesKey("PHP_ERROR", PHP_KEYWORD);
+
+    public static final TextAttributesKey PHPDOC_INTERNAL = TextAttributesKey.createTextAttributesKey("PHPDOC_INTERNAL", DefaultLanguageHighlighterColors.DOC_COMMENT_TAG);
+    //public static final TextAttributesKey PHP_RETURN_TYPE = ObjectUtils.notNull(TextAttributesKey.find("PHP_RETURN_TYPE"), DefaultLanguageHighlighterColors.KEYWORD);
 
     @Nullable
     private TextAttributesKey getKeywordKind(@NotNull final PsiElement element) {
         TextAttributesKey kind = null;
-        switch (element.getText()) {
+        String content = element.getText();
+
+        switch (content) {
             case "private":
             case "public":
             case "protected":
@@ -112,11 +126,16 @@ public final class CodeColorAnnotator implements Annotator {
                 kind = FUNCTION;
                 break;
 
+            case "return":
+                kind = PHP_RETURN;
+                break;
+
             case "boolval":
             case "debug_zval_dump":
             case "doubleval":
             case "empty":
             case "floatval":
+            case "fdiv":
             case "get_defined_vars":
             case "get_resource_type":
             case "gettype":
@@ -137,18 +156,36 @@ public final class CodeColorAnnotator implements Annotator {
             case "is_resource":
             case "is_scalar":
             case "is_string":
+            case "is_null":
+            case "not_null":
+            case "not_string":
+            case "not_set":
+            case "equals":
+            case "not_equals":
+            case "greater":
+            case "smaller":
+            case "equals_or_greater":
+            case "equals_or_smaller":
             case "isset":
-            case "print_r":
             case "serialize":
+            case "unserialize":
             case "settype":
             case "strval":
-            case "unserialize":
             case "unset":
-            case "var_dump":
-            case "var_export":
-            case "this":
             case "super":
                 kind = PHP_HANDLING_FUNCTION;
+                break;
+
+            case "true":
+                kind = PHP_TRUE_KEYWORD;
+                break;
+
+            case "false":
+                kind = PHP_FALSE_KEYWORD;
+                break;
+
+            case "null":
+                kind = PHP_NULL_KEYWORD;
                 break;
 
             case "addcslashes":
@@ -207,6 +244,9 @@ public final class CodeColorAnnotator implements Annotator {
             case "str_pad":
             case "str_repeat":
             case "str_replace":
+            case "str_contains":
+            case "str_starts_with":
+            case "str_ends_with":
             case "str_rot13":
             case "str_shuffle":
             case "str_split":
@@ -242,6 +282,9 @@ public final class CodeColorAnnotator implements Annotator {
             case "substr_count":
             case "substr_replace":
             case "substr":
+            case "grapheme_substr":
+            case "iconv_substr":
+            case "mb_substr":
             case "trim":
             case "ucfirst":
             case "ucwords":
@@ -394,8 +437,6 @@ public final class CodeColorAnnotator implements Annotator {
 
             case "json_decode":
             case "json_encode":
-            case "json_last_error_msg":
-            case "json_last_error":
                 kind = PHP_JSON_FUNCTION;
                 break;
 
@@ -458,18 +499,81 @@ public final class CodeColorAnnotator implements Annotator {
             case "func_get_arg":
             case "func_get_args":
             case "func_num_args":
+            case "token_get_all":
             case "function_exists":
             case "get_defined_functions":
+            case "get_resource_id":
+            case "get_debug_type":
             case "register_shutdown_function":
             case "register_tick_function":
             case "unregister_tick_function":
                 kind = PHP_HANDLER_FUNCTION;
                 break;
 
+            case "preg_filter":
+            case "preg_grep":
+            case "preg_match_all":
+            case "preg_match":
+            case "preg_quote":
+            case "preg_replace_callback_array":
+            case "preg_replace_callback":
+            case "preg_replace":
+            case "preg_split":
+                kind = PHP_PREG;
+                break;
+
+            case "date_default_timezone_set":
+            case "date_interval_create_from_date_string":
+            case "timezone_version_get":
+            case "timezone_abbreviations_list":
+            case "timezone_identifiers_list":
+            case "timezone_location_get":
+            case "timezone_transitions_get":
+            case "timezone_offset_get":
+            case "timezone_name_from_abbr":
+            case "timezone_name_get":
+            case "timezone_open":
+            case "date_timestamp_get":
+            case "date_timestamp_set":
+            case "date_isodate_set":
+            case "date_date_set":
+            case "date_time_set":
+            case "date_diff":
+            case "date_offset_get":
+            case "date_timezone_set":
+            case "date_timezone_get":
+            case "date_add":
+            case "date_sub":
+            case "date_modify":
+            case "date_format":
+            case "date_parse_from_format":
+            case "date_create_from_format":
+            case "date_create_immutable_from_format":
+            case "date_create_immutable":
+            case "date_create":
+            case "date":
+            case "date_sunset":
+            case "date_sunrise":
+            case "date_sun_info":
+            case "gmdate":
+            case "idate":
+            case "mktime":
+            case "strtotime":
+            case "time":
+            case "getdate":
+            case "strftime":
+            case "gmmktime":
+            case "gmstrftime":
+            case "getlastmod":
+            case "IntlDateFormatter":
+            case "DateTimeImmutable":
+            case "DateTime":
+                kind = PHP_DATE;
+                break;
+
             case "success":
             case "onSuccess":
             case "allow":
-            case "true":
                 kind = PHP_SUCCESS;
                 break;
 
@@ -477,11 +581,288 @@ public final class CodeColorAnnotator implements Annotator {
             case "onError":
             case "critical":
             case "deny":
-            case "false":
-            case "null":
+            case "intl_get_error_message":
+            case "preg_last_error_msg":
+            case "preg_last_error":
+            case "json_last_error_msg":
+            case "json_last_error":
+            case "error_get_last":
+            case "display_errors":
                 kind = PHP_ERROR;
                 break;
+
+            case "print_r":
+            case "console":
+            case "var_dump":
+            case "var_export":
+            case "debug":
+                kind = PHP_DEBUG;
+                break;
+
+            /*
+            case ": int":
+            case ": float":
+            case ": bool":
+            case ": string":
+            case ": array":
+            case ": null":
+            case ": object":
+            case ": interfaces":
+            case ": callable":
+            case ": mixed":
+            case ": never":
+            case ": void":
+            case ": ?int":
+            case ": ?float":
+            case ": ?bool":
+            case ": ?string":
+            case ": ?array":
+            case ": ?object":
+            case ": ?interfaces":
+            case ": ?callable":
+            case ": int|float":
+            case ": int|bool":
+            case ": int|string":
+            case ": int|array":
+            case ": int|null":
+            case ": int|object":
+            case ": int|interfaces":
+            case ": int|callable":
+            case ": float|bool":
+            case ": float|string":
+            case ": float|array":
+            case ": float|null":
+            case ": float|object":
+            case ": float|interfaces":
+            case ": float|callable":
+            case ": bool|string":
+            case ": bool|array":
+            case ": bool|null":
+            case ": bool|object":
+            case ": bool|interfaces":
+            case ": bool|callable":
+            case ": string|array":
+            case ": string|null":
+            case ": string|object":
+            case ": string|interfaces":
+            case ": string|callable":
+            case ": array|null":
+            case ": array|object":
+            case ": array|interfaces":
+            case ": array|callable":
+            case ": null|object":
+            case ": null|interfaces":
+            case ": null|callable":
+            case ": object|interfaces":
+            case ": object|callable":
+            case ": int|float|bool":
+            case ": int|float|string":
+            case ": int|float|array":
+            case ": int|float|null":
+            case ": int|float|object":
+            case ": int|float|interfaces":
+            case ": int|float|callable":
+            case ": int|bool|string":
+            case ": int|bool|array":
+            case ": int|bool|null":
+            case ": int|bool|object":
+            case ": int|bool|interfaces":
+            case ": int|bool|callable":
+            case ": int|string|array":
+            case ": int|string|null":
+            case ": int|string|object":
+            case ": int|string|interfaces":
+            case ": int|string|callable":
+            case ": int|array|null":
+            case ": int|array|object":
+            case ": int|array|interfaces":
+            case ": int|array|callable":
+            case ": int|null|object":
+            case ": int|null|interfaces":
+            case ": int|null|callable":
+            case ": int|object|interfaces":
+            case ": int|object|callable":
+            case ": float|bool|string":
+            case ": float|bool|array":
+            case ": float|bool|null":
+            case ": float|bool|object":
+            case ": float|bool|interfaces":
+            case ": float|bool|callable":
+            case ": float|string|array":
+            case ": float|string|null":
+            case ": float|string|object":
+            case ": float|string|interfaces":
+            case ": float|string|callable":
+            case ": float|array|null":
+            case ": float|array|object":
+            case ": float|array|interfaces":
+            case ": float|array|callable":
+            case ": float|null|object":
+            case ": float|null|interfaces":
+            case ": float|null|callable":
+            case ": float|object|interfaces":
+            case ": float|object|callable":
+            case ": bool|string|array":
+            case ": bool|string|null":
+            case ": bool|string|object":
+            case ": bool|string|interfaces":
+            case ": bool|string|callable":
+            case ": bool|array|null":
+            case ": bool|array|object":
+            case ": bool|array|interfaces":
+            case ": bool|array|callable":
+            case ": bool|null|object":
+            case ": bool|null|interfaces":
+            case ": bool|null|callable":
+            case ": bool|object|interfaces":
+            case ": bool|object|callable":
+            case ": string|array|null":
+            case ": string|array|object":
+            case ": string|array|interfaces":
+            case ": string|array|callable":
+            case ": string|null|object":
+            case ": string|null|interfaces":
+            case ": string|null|callable":
+            case ": string|object|interfaces":
+            case ": string|object|callable":
+            case ": array|null|object":
+            case ": array|null|interfaces":
+            case ": array|null|callable":
+            case ": array|object|interfaces":
+            case ": array|object|callable":
+            case ": null|object|interfaces":
+            case ": null|object|callable":
+            case ": object|interfaces|callable":
+            case ": int|float|bool|string":
+            case ": int|float|bool|array":
+            case ": int|float|bool|null":
+            case ": int|float|bool|object":
+            case ": int|float|bool|interfaces":
+            case ": int|float|bool|callable":
+            case ": int|float|string|array":
+            case ": int|float|string|null":
+            case ": int|float|string|object":
+            case ": int|float|string|interfaces":
+            case ": int|float|string|callable":
+            case ": int|float|array|null":
+            case ": int|float|array|object":
+            case ": int|float|array|interfaces":
+            case ": int|float|array|callable":
+            case ": int|float|null|object":
+            case ": int|float|null|interfaces":
+            case ": int|float|null|callable":
+            case ": int|float|object|interfaces":
+            case ": int|float|object|callable":
+            case ": int|bool|string|array":
+            case ": int|bool|string|null":
+            case ": int|bool|string|object":
+            case ": int|bool|string|interfaces":
+            case ": int|bool|string|callable":
+            case ": int|bool|array|null":
+            case ": int|bool|array|object":
+            case ": int|bool|array|interfaces":
+            case ": int|bool|array|callable":
+            case ": int|bool|null|object":
+            case ": int|bool|null|interfaces":
+            case ": int|bool|null|callable":
+            case ": int|bool|object|interfaces":
+            case ": int|bool|object|callable":
+            case ": int|string|array|null":
+            case ": int|string|array|object":
+            case ": int|string|array|interfaces":
+            case ": int|string|array|callable":
+            case ": int|string|null|object":
+            case ": int|string|null|interfaces":
+            case ": int|string|null|callable":
+            case ": int|string|object|interfaces":
+            case ": int|string|object|callable":
+            case ": int|array|null|object":
+            case ": int|array|null|interfaces":
+            case ": int|array|null|callable":
+            case ": int|array|object|interfaces":
+            case ": int|array|object|callable":
+            case ": int|null|object|interfaces":
+            case ": int|null|object|callable":
+            case ": float|bool|string|array":
+            case ": float|bool|string|null":
+            case ": float|bool|string|object":
+            case ": float|bool|string|interfaces":
+            case ": float|bool|string|callable":
+            case ": float|bool|array|null":
+            case ": float|bool|array|object":
+            case ": float|bool|array|interfaces":
+            case ": float|bool|array|callable":
+            case ": float|bool|null|object":
+            case ": float|bool|null|interfaces":
+            case ": float|bool|null|callable":
+            case ": float|bool|object|interfaces":
+            case ": float|bool|object|callable":
+            case ": float|string|array|null":
+            case ": float|string|array|object":
+            case ": float|string|array|interfaces":
+            case ": float|string|array|callable":
+            case ": float|string|null|object":
+            case ": float|string|null|interfaces":
+            case ": float|string|null|callable":
+            case ": float|string|object|interfaces":
+            case ": float|string|object|callable":
+            case ": float|array|null|object":
+            case ": float|array|null|interfaces":
+            case ": float|array|null|callable":
+            case ": float|array|object|interfaces":
+            case ": float|array|object|callable":
+            case ": float|null|object|interfaces":
+            case ": float|null|object|callable":
+            case ": bool|string|array|null":
+            case ": bool|string|array|object":
+            case ": bool|string|array|interfaces":
+            case ": bool|string|array|callable":
+            case ": bool|string|null|object":
+            case ": bool|string|null|interfaces":
+            case ": bool|string|null|callable":
+            case ": bool|string|object|interfaces":
+            case ": bool|string|object|callable":
+            case ": bool|array|null|object":
+            case ": bool|array|null|interfaces":
+            case ": bool|array|null|callable":
+            case ": bool|array|object|interfaces":
+            case ": bool|array|object|callable":
+            case ": bool|null|object|interfaces":
+            case ": bool|null|object|callable":
+            case ": string|array|null|object":
+            case ": string|array|null|interfaces":
+            case ": string|array|null|callable":
+            case ": string|array|object|interfaces":
+            case ": string|array|object|callable":
+            case ": string|null|object|interfaces":
+            case ": string|null|object|callable":
+            case ": array|null|object|interfaces":
+            case ": array|null|object|callable":
+            case ": null|object|interfaces|callable":
+            case ": int|float|bool|string|array":
+            case ": int|float|bool|string|null":
+            case ": int|float|bool|string|object":
+            case ": int|float|bool|string|interfaces":
+            case ": int|float|bool|string|callable":
+            case ": int|float|bool|array|null":
+            case ": int|float|bool|array|object":
+            case ": int|float|bool|array|interfaces":
+            case ": int|float|bool|array|callable":
+            case ": int|float|bool|null|object":
+            case ": int|float|bool|null|interfaces":
+            case ": int|float|bool|null|callable":
+            case ": int|float|bool|object|interfaces":
+            case ": int|float|bool|object|callable":
+            case ": int|float|string|array|null":
+            case ": int|float|string|array|object":
+            case ": int|float|string|array|interfaces":
+            case ": int|float|array|object|interfaces":
+            case ": int|float|array|object|callable":
+                kind = PHP_RETURN_TYPE;
+                break;
+            */
         }
+
         return kind;
     }
 }
